@@ -39,10 +39,10 @@ RUN	conda update conda &&  \
 	conda config --add channels bioconda &&  \
 	conda install -y r-base==3.6.3 &&  \
 	conda install -y jupyter && \
-	conda install -y r-devtools r-biocmanager && \
+	conda install -y r-devtools r-biocmanager r-testthat && \
 	conda clean -y --all
 # 使R能在jupyter中使用
-RUN	R -e "devtools::install_github('kumine/myplot')" && \
+RUN	R -e "devtools::install_github('kumine/myplot',quiet = T,upgrade = F,force = F)" && \
 	R -e "devtools::install_github('IRkernel/IRkernel',quiet = T,upgrade = F,force = F)" && \
 	R -e "IRkernel::installspec(user = FALSE)" && \
 	conda install -y ipyparallel && \
@@ -66,7 +66,8 @@ RUN	conda install -y r-openxlsx \
 	r-argparse \
 	r-cairo \
 	r-ggplot2 r-ggrepel r-ggthemes r-ggpubr && \
-	conda clean -y --all
+	conda clean -y --all && \
+	R -e "devtools::install_github('lujw666/DataAnalystR',quiet = T,upgrade = F,force = F)"
 # 设置utf-8
 ENV	LANG zh_CN.utf8
 CMD	["/usr/sbin/sshd", "-D"]
