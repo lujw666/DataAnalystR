@@ -41,6 +41,16 @@ RUN	conda update conda &&  \
 	conda install -y jupyter && \
 	conda install -y r-devtools r-biocmanager r-testthat && \
 	conda clean -y --all
+#安装studio-server
+RUN	apt-get update -y && \
+	apt-get install -y gdebi-core && \
+	wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.2.5033-amd64.deb  && \
+	gdebi --non-interactive rstudio-server-1.2.5033-amd64.deb  && \
+	rm -rf rstudio-server-1.2.5033-amd64.deb && \
+	echo "rsession-which-r=/opt/conda/bin/R" >> /etc/rstudio/rserver.conf  && \
+	echo "www-port=8787" >> /etc/rstudio/rserver.conf && \
+	rm -rf /etc/rstudio/rsession.conf && \
+	apt-get clean
 # 使R能在jupyter中使用
 RUN	R -e "devtools::install_github('kumine/myplot',quiet = T,upgrade = F,force = F)" && \
 	R -e "devtools::install_github('IRkernel/IRkernel',quiet = T,upgrade = F,force = F)" && \
@@ -66,8 +76,10 @@ RUN	conda install -y r-openxlsx \
 	r-argparse \
 	r-cairo \
 	r-ggplot2 r-ggrepel r-ggthemes r-ggpubr && \
-	conda clean -y --all && \
-	R -e "devtools::install_github('lujw666/DataAnalystR',quiet = T,upgrade = F,force = F)"
+	conda clean -y --all
 # 设置utf-8
+RUN	useradd -m test -s /bin/bash -d /home/test && \
+	echo 'test:123456a' | chpasswd
 ENV	LANG zh_CN.utf8
-CMD	["/usr/sbin/sshd", "-D"]
+EXPOSE 8787 8888
+CMD	["/usr/sbin/rstudio-server", "start"]
