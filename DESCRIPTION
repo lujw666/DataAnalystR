@@ -1,0 +1,10 @@
+Package: DataAnalystR
+Title: Used for data analysis
+Version: 1.0.0
+Authors@R: person("jiawei", "lu", email = "ljw18721327472@outlook.com", role = c("aut", "cre"))
+Description: Used for data analysis
+Depends: R (>= 3.6.0)
+Imports: openxlsx
+License: MIT
+Encoding: utf-8
+LazyData: true
